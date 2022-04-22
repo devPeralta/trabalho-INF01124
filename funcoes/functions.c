@@ -11,7 +11,6 @@
 #define MAXNOMEPLAYER 100
 #define MAXNUMTAGS 10
 #define MAXLENTAGS 5
-#define TAMPLAYERS 2000
 
 char *minuscula(char *str){
 
@@ -161,6 +160,24 @@ int trie_insert (struct trie *trie, char *word, unsigned word_len)
     }
     
     return trie_insert(trie->children[index], word + 1, word_len - 1);
+}
+
+void trie_create(Lista *lista_players, struct trie *trie){
+    
+    int ret=0;
+    char word[100] = {0};
+
+    for(int i=0; i<MAXPLAYERS+1; i++) {
+        le_player(lista_players->dados, word);
+        strcpy(word, minuscula(word));
+        ret = trie_insert(trie, word, strnlen(word, 100));
+        if (-1 == ret){
+            printf("Nao foi possivel inserir a palavra na trie\n");
+            exit(1);
+        }
+        lista_players = lista_players->prox;
+    }
+
 }
 
 int trie_search(struct trie *trie, char *word, unsigned word_len,struct trie **result)
