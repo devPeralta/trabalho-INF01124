@@ -245,3 +245,4 @@ void trie_print (struct trie *trie, char prefix[], unsigned prefix_len)
         trie_print(trie->children[i], prefix, prefix_len + 1);
     }
 }
+
