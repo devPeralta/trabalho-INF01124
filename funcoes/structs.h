@@ -12,6 +12,10 @@ struct lista {
 typedef struct lista Lista;
 
 struct trie {
+    int sofifaid;
     struct trie *children[ALPHABET_SIZE];
+    int qtd_rating;
+    double media_rating;
     bool end_of_word;
+
 };

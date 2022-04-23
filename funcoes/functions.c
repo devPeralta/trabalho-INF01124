@@ -25,6 +25,22 @@ char *minuscula(char *str){
 
 }
 
+void inicializaVet_int(int *v, int tamanho){
+
+    for(int i=0; i<tamanho;i++){
+        v[i] = 0;
+    }
+
+}
+
+void inicializaVet_double(double *v, int tamanho){
+
+    for(int i=0; i<tamanho;i++){
+        v[i] = 0.0;
+    }
+
+}
+
 Lista *inicializaLista()
 {
     return NULL;
@@ -78,6 +94,95 @@ Lista *saveFile(FILE *file, char nomeArquivo[FILEMAXNOME], Lista *l)
     return l;
 }
 
+void saveRatings(FILE *file, double *media, int *count){
+
+    char line[100], rating[3], sofifaid[6];
+    int cont=0, cont2=0, num_userid, num_sofifaid;
+    double num_rating;
+    int posicao;
+
+    file = fopen("csvFiles/minirating.csv", "r");
+    if (file == NULL)
+    {
+        perror("Nao foi possivel abrir o arquivo.");
+        exit(1);
+    }
+
+    while (fgets(line, sizeof(line), file))
+    {
+        cont=0;
+        char s[2] = ",";
+        char *token;
+        token = strtok(line, s);
+
+        while (token != NULL)
+        {   
+            if(cont2>0){
+                if(cont==0){
+                    
+                }
+                if(cont==1){
+                    if(strlen(token) == 11){
+                        sofifaid[0] = token[0];
+                        sofifaid[1] = token[1];
+                        sofifaid[2] = token[2];
+                        sofifaid[3] = token[3];
+                        sofifaid[4] = token[4];
+                        sofifaid[5] = token[5];
+                        sofifaid[6] = '\0';
+                        rating[0] = token[7];
+                        rating[1] = token[8];
+                        rating[2] = token[9];
+                        rating[3] = '\0';
+                    }
+                    else if(strlen(token) == 10){
+                        sofifaid[0] = token[0];
+                        sofifaid[1] = token[1];
+                        sofifaid[2] = token[2];
+                        sofifaid[3] = token[3];
+                        sofifaid[4] = token[4];
+                        sofifaid[5] = '\0';
+                        rating[0] = token[6];
+                        rating[1] = token[7];
+                        rating[2] = token[8];
+                        rating[3] = '\0';
+                    }
+                    else if(strlen(token) == 9){
+                        sofifaid[0] = token[0];
+                        sofifaid[1] = token[1];
+                        sofifaid[2] = token[2];
+                        sofifaid[3] = token[3];
+                        sofifaid[4] = '\0';
+                        rating[0] = token[5];
+                        rating[1] = token[6];
+                        rating[2] = token[7];
+                        rating[3] = '\0';
+                    }
+                    else if(strlen(token) == 7){
+                        sofifaid[0] = token[0];
+                        sofifaid[1] = token[1];
+                        sofifaid[2] = '\0';
+                        rating[0] = token[3];
+                        rating[1] = token[4];
+                        rating[2] = token[5];
+                        rating[3] = '\0';
+                    }
+                    num_sofifaid = atoi(sofifaid);
+                    num_rating = atof(rating);
+                    posicao = num_sofifaid;
+
+                    printf("sofifaid = %d\n", num_sofifaid);
+                    printf("rating = %lf\n\n", num_rating);
+                }
+                
+                cont++;
+            }
+            token = strtok(NULL, "");
+        }
+        cont2++;
+    }
+}
+
 void le_player(char dado[MAXDADOS], char *word){
 
     int cont=0;
@@ -129,6 +234,8 @@ int trie_insert (struct trie *trie, char *word, unsigned word_len)
     int ret = 0, index;
 
     if (0 == word_len) {
+        trie->media_rating = 0.0;
+        trie->qtd_rating = 0;
         trie->end_of_word = true;
         return 0;
     }
@@ -218,7 +325,8 @@ int trie_search(struct trie *trie, char *word, unsigned word_len,struct trie **r
 void trie_print (struct trie *trie, char prefix[], unsigned prefix_len)
 {
     if (true == trie->end_of_word) {
-        printf("%.*s\n", prefix_len, prefix);
+        printf("%.*s\t\t", prefix_len, prefix);
+        printf("qtd=%d\t\tmedia=%.5lf\n", trie->qtd_rating, trie->media_rating);
     }
 
     for (int i = 0; i < ALPHABET_SIZE; i++) {
