@@ -13,7 +13,7 @@ void inicializaVet_double(double *v, int tamanho);
 Lista *inicializaLista();
 Lista *insereLista(Lista *l, char dado[MAXDADOS]);
 Lista *saveFile(FILE *file, char nomeArquivo[FILEMAXNOME], Lista *l);
-void saveRatings(FILE *file, double *media, int *count);
+void saveRatings(FILE *file, HashTable ht);
 void le_player(char dado[MAXDADOS], char *word);
 int trie_new (struct trie **trie);
 int trie_insert (struct trie *trie,char *word, unsigned word_len);

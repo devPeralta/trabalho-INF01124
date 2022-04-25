@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #define ALPHABET_SIZE 30
+#define TAMHASHTABLE 5000
 
 struct lista {
  char dados[150];
@@ -12,10 +13,14 @@ struct lista {
 typedef struct lista Lista;
 
 struct trie {
-    int sofifaid;
     struct trie *children[ALPHABET_SIZE];
+    bool end_of_word;
+};
+
+typedef struct hashtable
+{
+    int sofifaid;
     int qtd_rating;
     double media_rating;
-    bool end_of_word;
-
-};
+    struct hashtable *prox;
+}*vetHT[TAMHASHTABLE], table, *HashTable;

@@ -20,13 +20,13 @@ int main()
     double rating_media[MAXPLAYERS];
     struct trie * root = NULL;
     struct trie * trie = NULL;
+    vetHT hashtable;
     char word[100];
 
+    inicializaHashTable(hashtable);
 
-    lista_players = inicializaLista(); // inicializa uma lista para armazenar os dados dos jogadores
-    lista_players = saveFile(file_players, players, lista_players); // salva os dados dos jogadores em lista_players
-    inicializaVet_double(rating_media, MAXPLAYERS);
-    inicializaVet_int(rating_count, MAXPLAYERS);
+    //lista_players = inicializaLista(); // inicializa uma lista para armazenar os dados dos jogadores
+    //lista_players = saveFile(file_players, players, lista_players); // salva os dados dos jogadores em lista_players
    
     printf("\n********************* PESQUISAS ********************\n");
     printf("Digite 1 para: Busca por jogador\n"); // Pesquisas sobre os nomes de jogadores
@@ -72,10 +72,11 @@ int main()
         }
         break;
         case 2:{
-            saveRatings(file_minirating, rating_media, rating_count);
+            saveRatings(file_minirating, hashtable);
         }
         break;
-        case 3:
+        case 3:{
+        }
         break;
         case 4:
         break;
