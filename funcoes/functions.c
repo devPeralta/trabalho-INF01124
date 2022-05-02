@@ -11,7 +11,7 @@
 #define MAXNOMEPLAYER 100
 #define MAXNUMTAGS 10
 #define MAXLENTAGS 5
-#define TAMHASHTABLE 5000
+#define TAMPLAYERS 2000
 
 char *minuscula(char *str){
 
@@ -26,66 +26,120 @@ char *minuscula(char *str){
 
 }
 
-void inicializaVet_int(int *v, int tamanho){
-
-    for(int i=0; i<tamanho;i++){
-        v[i] = 0;
-    }
-
+int hashCode(int key) {
+   return key % HASHSIZE;
 }
 
-void inicializaVet_double(double *v, int tamanho){
-
-    for(int i=0; i<tamanho;i++){
-        v[i] = 0.0;
-    }
-
+struct DataItem *search(int key) {
+   //get the hash 
+   
+   int hashIndex = hashCode(key);  
+    
+   //move in array until an empty 
+   while(hashArray[hashIndex] != NULL) {
+	
+      if(hashArray[hashIndex]->sofifaid == key)
+      {
+        return hashArray[hashIndex]; 
+      }
+      else{
+      }
+        
+			
+      //go to next cell
+      ++hashIndex;
+      
+		
+      //wrap around the table
+      hashIndex %= HASHSIZE;
+   }        
+   return NULL;        
 }
 
-void inicializaHashTable(vetHT v){
+void insert(int key,float data) {
+    int flag=0;
+    //printf("key=%d -- data=%d", key, data);
 
-    HashTable novo;
+   struct DataItem *item = (struct DataItem*) malloc(sizeof(struct DataItem));
+   item->somaRating = data;  
+   item->sofifaid = key;
+   
+   //get the hash 
+   int hashIndex = hashCode(key);
+   //item->qtdRating = hashArray[hashIndex]->qtdRating;
 
-    for(int i=0;i<TAMHASHTABLE;i++){
-        novo  = (HashTable) calloc(1, sizeof(table));
-        //strcpy(novo->nome, "");
-        novo->prox = NULL;
-        v[i] = novo;
-    }
+   //move in array until an empty or deleted cell
+   while(hashArray[hashIndex] != NULL && hashArray[hashIndex]->sofifaid != -1 && flag==0) {
+
+       if(hashArray[hashIndex]->sofifaid == key){
+           item->somaRating = hashArray[hashIndex]->somaRating + data;
+           item->qtdRating = hashArray[hashIndex]->qtdRating + 1;
+           flag=1;
+       }
+       else{
+           //go to next cell
+            ++hashIndex;
+            //wrap around the table
+            hashIndex %= HASHSIZE;
+       }
+
+      
+   }
+
+   if(flag==0){
+       item->qtdRating = 1;
+   }
+	
+   hashArray[hashIndex] = item;
 }
 
-int index_hash(int sofifaid){
+void saveRatings(FILE *file){
 
-    return sofifaid%TAMHASHTABLE;
+    char line[100];
+    int cont, cont2=0;
+    int num_userid, num_sofifaid;
+    float num_rating;
 
-}
-
-void insere_tabela(vetHT ht, int sofifaid, int qtd_rating, double media_rating){
-    int indexhash = index_hash(sofifaid);
-    HashTable x;
-
-    x = ht[indexhash];
-
-    if(x->qtd_rating == 0){
-        x->sofifaid = sofifaid;
-        x->media_rating = media_rating;
-        x->qtd_rating = qtd_rating;
+    file = fopen("csvFiles/minirating.csv", "r");
+    if (file == NULL)
+    {
+        perror("Nao foi possivel abrir o arquivo rating.csv.");
+        exit(1);
     }
-    else{
-        while (x->prox!=NULL)
-        {
-            x = x->prox;
+
+    while (fgets(line, sizeof(line), file))
+    {
+        cont=0;
+        char s[2] = ",";
+        char *token;
+        token = strtok(line, s);
+
+        while (token)
+        {   
+            if(cont2>0){
+            if(cont2%1000==0){
+            }
+            cont++;
+                if(cont==1){
+                    num_userid = atoi(token);
+                }
+                else if(cont==2){
+                    num_sofifaid = atoi(token);
+                }
+                else if(cont==3){
+                    num_rating = atof(token);
+                }
+            }
+            token = strtok(NULL, ",");
         }
-
-        HashTable novo = malloc(sizeof(HashTable));
-        //HashTable novo;
-
-        x->prox = novo;
-        novo->prox = NULL;
-        novo->sofifaid = sofifaid;
-        novo->media_rating = media_rating;
-        novo->qtd_rating = qtd_rating;
+        if(cont2>0){ 
+            insert(num_sofifaid, num_rating);
+            //insere_tabela(ht, num_sofifaid, num_userid, num_rating);
+        }
+        //printf("%d\n", cont2);
+        cont2++;
     }
+
 }
 
 Lista *inicializaLista()
@@ -94,7 +148,6 @@ Lista *inicializaLista()
 }
 
 Lista *insereLista(Lista *l, char dado[MAXDADOS]){
-
     Lista *novo = (Lista *)malloc(sizeof(Lista));
     strcpy(novo->dados, dado);
     novo->prox = l;
@@ -141,56 +194,10 @@ Lista *saveFile(FILE *file, char nomeArquivo[FILEMAXNOME], Lista *l)
     return l;
 }
 
-void saveRatings(FILE *file, HashTable ht){
-
-    char line[100], rating[3], sofifaid[6];
-    int cont, cont2=0, num_userid, num_sofifaid;
-    double num_rating;
-
-    file = fopen("csvFiles/minirating.csv", "r");
-    if (file == NULL)
-    {
-        perror("Nao foi possivel abrir o arquivo.");
-        exit(1);
-    }
-
-    while (fgets(line, sizeof(line), file))
-    {
-        cont=0;
-        
-        char s[2] = ",";
-        char *token;
-        token = strtok(line, s);
-
-        while (token)
-        {   
-            if(cont2>0){
-            puts(token);
-            cont++;
-                if(cont==1){
-                    num_userid = atoi(token);
-                }
-                else if(cont==2){
-                    num_sofifaid = atoi(token);
-                }
-                else if(cont==3){
-                    num_rating = atof(token);
-                }
-            }
-            token = strtok(NULL, ",");
-        }
-        if(cont2>0){
-            insere_tabela(ht, num_sofifaid, num_userid, num_rating);
-        }
-        printf("%d\n", cont2);
-        cont2++;
-    }
-}
-
-void le_player(char dado[MAXDADOS], char *word){
+void le_player(char dado[MAXDADOS], char *word, int *id){
 
     int cont=0;
-    int id;
+    int idsofifa;
     char tags[25] = "";
     char nome[MAXNOMEPLAYER], tag[MAXNUMTAGS][MAXLENTAGS];
 
@@ -201,8 +208,8 @@ void le_player(char dado[MAXDADOS], char *word){
     while (token != NULL)
     {
         if (cont == 0)
-        {
-            id = atoi(token);
+        {   
+            idsofifa = atoi(token);
         }
         else if (cont == 1)
         {
@@ -218,8 +225,7 @@ void le_player(char dado[MAXDADOS], char *word){
         cont++;
     }
     strcpy(word, nome);
-   //printf("id = %d\nnome = ", id);
-   //printf("tags = %s\n", tags);
+    *id = idsofifa;
 
 }
 
@@ -233,12 +239,15 @@ int trie_new (struct trie **trie)
     return 0;
 }
 
-int trie_insert (struct trie *trie, char *word, unsigned word_len)
+int trie_insert (struct trie *trie, char *word, unsigned word_len, int id, int *qtd, float *avg)
 {
     int ret = 0, index;
 
     if (0 == word_len) {
         trie->end_of_word = true;
+        trie->trie_sofifaid = id;
+        trie->trie_qtdrating = qtd;
+        trie->trie_avgrating = avg;
         return 0;
     }
     if(((int)word[0]) == 32){ // space
@@ -268,25 +277,7 @@ int trie_insert (struct trie *trie, char *word, unsigned word_len)
         }
     }
     
-    return trie_insert(trie->children[index], word + 1, word_len - 1);
-}
-
-void trie_create(Lista *lista_players, struct trie *trie){
-    
-    int ret=0;
-    char word[100] = {0};
-
-    for(int i=0; i<MAXPLAYERS+1; i++) {
-        le_player(lista_players->dados, word);
-        strcpy(word, minuscula(word));
-        ret = trie_insert(trie, word, strnlen(word, 100));
-        if (-1 == ret){
-            printf("Nao foi possivel inserir a palavra na trie\n");
-            exit(1);
-        }
-        lista_players = lista_players->prox;
-    }
-
+    return trie_insert(trie->children[index], word + 1, word_len - 1, id, qtd, avg);
 }
 
 int trie_search(struct trie *trie, char *word, unsigned word_len,struct trie **result)
@@ -325,9 +316,41 @@ int trie_search(struct trie *trie, char *word, unsigned word_len,struct trie **r
 }
 
 void trie_print (struct trie *trie, char prefix[], unsigned prefix_len)
-{
+{      
+    char aux[50];
+    int len_aux;
+
     if (true == trie->end_of_word) {
-        printf("%.*s\n", prefix_len, prefix);
+        printf("%d ", trie->trie_sofifaid);
+
+        itoa(trie->trie_sofifaid, aux, 10);
+        len_aux = strlen(aux) + 2;
+        //printf(" %d ", prefix_len);
+
+        if(prefix_len+len_aux == 49){
+            printf("%.*s", prefix_len, prefix);
+        }
+        else if(prefix_len+len_aux > 45){
+            printf("%.*s\t", prefix_len, prefix);
+        }
+        else if(prefix_len+len_aux > 40){
+            printf("%.*s\t", prefix_len, prefix);
+        }
+        else if(prefix_len+len_aux > 32){
+            printf("%.*s\t\t", prefix_len, prefix);
+        }
+        else if(prefix_len+len_aux >= 25){
+            printf("%.*s\t\t\t", prefix_len, prefix);
+        }
+        else if(prefix_len+len_aux > 16){
+            printf("%.*s\t\t\t\t", prefix_len, prefix);
+        }
+        else{
+            printf("%.*s\t\t\t\t\t", prefix_len, prefix);
+        }
+        
+        printf("%.6f\t", *trie->trie_avgrating);
+        printf("%d\n", *trie->trie_qtdrating);
     }
 
     for (int i = 0; i < ALPHABET_SIZE; i++) {
@@ -354,4 +377,3 @@ void trie_print (struct trie *trie, char prefix[], unsigned prefix_len)
         trie_print(trie->children[i], prefix, prefix_len + 1);
     }
 }
-
