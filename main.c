@@ -28,17 +28,37 @@ int main()
     lista_players = saveFile(file_players, players, lista_players); // salva os dados dos jogadores na lista
     
     saveRatings(file_minirating);
+
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[0], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[0]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[1], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[1]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[2], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[2]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[3], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[3]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[4], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[4]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[5], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[5]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[6], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[6]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[7], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[7]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[8], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[8]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[9], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[9]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[10], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[10]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[11], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[11]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[12], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[12]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[13], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[13]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[14], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[14]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[15], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[15]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[16], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[16]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[17], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[17]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[18], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[18]);
+    printf("userid=%d\tsofifaid=%d\tmaiorrating=%.2f\n\n", hashUser[hashCode(4, HASHSIZEUSERS)]->userid, hashUser[hashCode(4, HASHSIZEUSERS)]->sofifaid[19], hashUser[hashCode(4, HASHSIZEUSERS)]->rating[19]);
     
     ret = trie_new(&root); // cria trie
     for(int i=0; i<MAXPLAYERS; i++) { // insere "MAXPLAYERS" jogadores na trie
         le_player(lista_players->dados, word, &list_sofifaid); // salva dados do jogador em uma string auxiliar
         strcpy(word, minuscula(word)); // passa todos caracteres da string para minuscula
-        
-        item = search(list_sofifaid);
-        if (item != NULL){
-            item->avgRating = item->somaRating / item->qtdRating;
-            trieqtdrating = &item->qtdRating;
-            trieavgrating = &item->avgRating;
+        player = search(list_sofifaid);
+        if (player != NULL){
+            player->avgRating = player->somaRating / player->qtdRating;
+            trieqtdrating = &player->qtdRating;
+            trieavgrating = &player->avgRating;
             ret = trie_insert(root, word, strnlen(word, 100), list_sofifaid, trieqtdrating, trieavgrating); // insere a string na trie
             if (-1 == ret){ // testa se conseguiu inserir na trie
             fprintf(stderr, "Could not insert word into trie\n");

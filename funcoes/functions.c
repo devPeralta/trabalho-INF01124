@@ -23,17 +23,16 @@ char *minuscula(char *str){
     }
 
     return lower;
-
 }
 
-int hashCode(int key) {
-   return key % HASHSIZE;
+int hashCode(int key, int tamanhotabela) {
+   return key % tamanhotabela;
 }
 
-struct DataItem *search(int key) {
+struct DataPlayer *search(int key) {
    //get the hash 
    
-   int hashIndex = hashCode(key);  
+   int hashIndex = hashCode(key, HASHSIZEPLAYER);  
     
    //move in array until an empty 
    while(hashArray[hashIndex] != NULL) {
@@ -51,46 +50,96 @@ struct DataItem *search(int key) {
       
 		
       //wrap around the table
-      hashIndex %= HASHSIZE;
+      hashIndex %= HASHSIZEPLAYER;
    }        
    return NULL;        
 }
 
-void insert(int key,float data) {
+void insertPlayer(int key,float data) {
     int flag=0;
     //printf("key=%d -- data=%d", key, data);
 
-   struct DataItem *item = (struct DataItem*) malloc(sizeof(struct DataItem));
-   item->somaRating = data;  
-   item->sofifaid = key;
+   struct DataPlayer *player = (struct DataPlayer*) malloc(sizeof(struct DataPlayer));
+   player->somaRating = data;  
+   player->sofifaid = key;
    
    //get the hash 
-   int hashIndex = hashCode(key);
-   //item->qtdRating = hashArray[hashIndex]->qtdRating;
+   int hashIndex = hashCode(key, HASHSIZEPLAYER);
+   //player->qtdRating = hashArray[hashIndex]->qtdRating;
 
    //move in array until an empty or deleted cell
-   while(hashArray[hashIndex] != NULL && hashArray[hashIndex]->sofifaid != -1 && flag==0) {
+   while(hashArray[hashIndex] != NULL && flag==0) {
 
        if(hashArray[hashIndex]->sofifaid == key){
-           item->somaRating = hashArray[hashIndex]->somaRating + data;
-           item->qtdRating = hashArray[hashIndex]->qtdRating + 1;
+           player->somaRating = hashArray[hashIndex]->somaRating + data;
+           player->qtdRating = hashArray[hashIndex]->qtdRating + 1;
            flag=1;
        }
        else{
            //go to next cell
             ++hashIndex;
             //wrap around the table
-            hashIndex %= HASHSIZE;
+            hashIndex %= HASHSIZEPLAYER;
        }
 
       
    }
 
    if(flag==0){
-       item->qtdRating = 1;
+       player->qtdRating = 1;
    }
 	
-   hashArray[hashIndex] = item;
+   hashArray[hashIndex] = player;
+}
+
+void insertUser(int user_id, int user_sofifaid, float user_rating) {
+    int flag=0, pos_newrating=-1;
+
+   struct DataUser *user = (struct DataUser*) malloc(sizeof(struct DataUser));
+
+   int hashIndex = hashCode(user_id, HASHSIZEUSERS); 
+   
+   while(hashUser[hashIndex] != NULL && flag==0) { 
+
+        if(hashUser[hashIndex]->userid == user_id){ 
+            
+            for(int i=0; i<20;i++){
+                if(hashUser[hashIndex]->rating[i] >= user_rating){ 
+
+                }
+                else{ 
+                    pos_newrating = i;
+                    i=20;
+                }
+            }
+
+            if (pos_newrating >= 0 && pos_newrating < 20)
+            {
+                for (int i = 19; i > pos_newrating; i--)
+                {
+
+                    hashUser[hashIndex]->rating[i] = hashUser[hashIndex]->rating[i - 1];
+                    hashUser[hashIndex]->sofifaid[i] = hashUser[hashIndex]->sofifaid[i - 1];
+                }
+
+                hashUser[hashIndex]->rating[pos_newrating] = user_rating;
+                hashUser[hashIndex]->sofifaid[pos_newrating] = user_sofifaid;
+            }
+
+            flag=1;
+       }
+       else{
+            ++hashIndex;
+            hashIndex = (hashIndex * hashIndex) %  HASHSIZEPLAYER;
+       }
+   }
+
+   if(flag==0){
+        user->userid = user_id;
+        user->sofifaid[0] = user_sofifaid;
+        user->rating[0] = user_rating;
+        hashUser[hashIndex] = user;
+   }
 }
 
 void saveRatings(FILE *file){
@@ -100,7 +149,7 @@ void saveRatings(FILE *file){
     int num_userid, num_sofifaid;
     float num_rating;
 
-    file = fopen("csvFiles/minirating.csv", "r");
+    file = fopen("csvFiles/rating.csv", "r");
     if (file == NULL)
     {
         perror("Nao foi possivel abrir o arquivo rating.csv.");
@@ -117,8 +166,6 @@ void saveRatings(FILE *file){
         while (token)
         {   
             if(cont2>0){
-            if(cont2%1000==0){
-            }
             cont++;
                 if(cont==1){
                     num_userid = atoi(token);
@@ -133,10 +180,15 @@ void saveRatings(FILE *file){
             token = strtok(NULL, ",");
         }
         if(cont2>0){ 
-            insert(num_sofifaid, num_rating);
-            //insere_tabela(ht, num_sofifaid, num_userid, num_rating);
+            insertPlayer(num_sofifaid, num_rating);
+            if(cont2<7500000){
+                insertUser(num_userid, num_sofifaid, num_rating);
+            }
         }
-        //printf("%d\n", cont2);
+        if(cont2%240000 == 0){
+            system("cls");
+            printf("%d%%\n", 2 * cont2/480000);
+        }
         cont2++;
     }
 
@@ -377,3 +429,4 @@ void trie_print (struct trie *trie, char prefix[], unsigned prefix_len)
         trie_print(trie->children[i], prefix, prefix_len + 1);
     }
 }
+
