@@ -49,5 +49,6 @@ struct trie { // arvore trie para armazenar todos nomes dos players
     int *trie_sofifaid; // armazena o id do player no nodo da ultima letra
     float *trie_avgrating; // armazena a media de avaliacoes no nodo da ultima letra
     int *trie_qtdrating; // armazena a quantidade de avaliacoes no nodo da ultima letra
+    char trie_position[25];
     bool end_of_word; // booleano para sinalizar fim do nome do player
 };
