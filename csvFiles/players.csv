@@ -2843,7 +2843,6 @@ sofifa_id,name,player_positions
 187132,Carlos Augusto Zambrano Ochandarte,CB
 187323,Henrique Adriano Buss,"CB, CDM"
 187517,Viktor Vasin,CB
-187533,Aleksey Ionov,"RM, LM, ST"
 187702,Omar El Kaddouri,"CAM, CM, LM"
 187924,Clement Grenier,"CM, CAM"
 188182,Leon Aderemi Balogun,CB
@@ -3475,7 +3474,6 @@ sofifa_id,name,player_positions
 180283,Ki Sung Yueng,"CM, CDM"
 181205,Adam Hlousek,"LB, LM"
 181236,Fernando Henrique Boldrin,"CAM, RM"
-181262,Marek Suchy,CB
 181383,Jakob Johansson,"CDM, CM"
 181404,Larrys Mabiala Destin,CB
 182001,Cristian Chagas Tarouco,CB
@@ -3782,7 +3780,6 @@ sofifa_id,name,player_positions
 233993,Ricardo Silas Guerreda Vilela,RB
 233994,Kaio Antonaldo Selva Mota,CB
 234015,Caio Bruno Milacar Kenedy,CAM
-234949,Joao Pedro Reis Amaral,"RM, RW"
 235055,Filip Stojkovic,"RB, RWB, CB"
 235502,Luis Gustavo Melere da Silva,"RM, LM"
 236071,Joao Rodolfo Bardinho Barros,"LB, RB"
@@ -4537,7 +4534,6 @@ sofifa_id,name,player_positions
 234577,Diogo Meireles Costa,GK
 235673,Dario Maresic,CB
 237840,Magnus Kofod Andersen,CM
-245940,Silas Wamangituka,"ST, RM, LM"
 247103,David Hancko,"CB, LB"
 248060,Mihai Valentin Mihaila,LW
 248695,Wesley Fofana,CB
@@ -4550,7 +4546,6 @@ sofifa_id,name,player_positions
 232192,Christopher Martins Pereira,"CDM, CM"
 233409,Robert Gumny,RB
 235125,Jose Joaquin Esquivel Martinez,"CDM, CM"
-235983,Alejandro Pozo Pozo,"RB, RM, LM"
 236804,Facundo Axel Medina,"CB, LB"
 238580,Idriz Naser Voca,"CDM, CM"
 238900,Ermedin Demirovic,ST
@@ -4933,7 +4928,6 @@ sofifa_id,name,player_positions
 216605,Carlos Akapo Martinez,"RB, LB"
 219626,Jose Luis Gomez,"RB, RWB"
 219860,Geisson Alexander Perea Ocoro,CB
-220638,Luis Miguel Sanchez Benitez,"CDM, CM"
 221621,Steven Mitchell Birnbaum,CB
 222838,Bashkim Ajdini,"RB, RM"
 223030,Aytac Kara,"CM, CDM"

@@ -6,16 +6,17 @@
 #define FILEMAXNOME 25
 #define MAXDADOS 200
 #define MAXRATINGS 24188078
-#define MAXPLAYERS 18944
+#define MAXPLAYERS 18939
 #define MAXTAGS 364950
-#define MAXNOMEPLAYER 100
+#define MAXNOMEPLAYER 50
 #define MAXNUMTAGS 10
 #define MAXLENTAGS 5
 #define TAMPLAYERS 2000
 #define ALPHABET_SIZE 30
-#define HASHSIZEPLAYER 29383
-//#define HASHSIZEUSERS 10000
+#define HASHSIZEPLAYER 40193
 #define HASHSIZEUSERS 24188078
+#define MAXTOPN 1000
+#define MULTIPLICADORHASH 31
 
 struct DataPlayer { // player
    int sofifaid;   // id do player
@@ -31,11 +32,11 @@ struct DataUser { // user
 };
 
 struct DataPlayer* hashArray[HASHSIZEPLAYER]; // tabela hash dos players
-struct DataPlayer* dummyItem; // nao usado ainda
+//struct DataPlayer* dummyItem; // nao usado ainda
 struct DataPlayer* player; // variavel do tipo DataPlayer
 
 struct DataUser* hashUser[HASHSIZEUSERS]; // tabela hash dos users
-struct DataUser* dummyUser; // nao usado ainda
+//struct DataUser* dummyUser; // nao usado ainda
 struct DataUser* user; // variavel do tipo DataUser
 
 struct lista { // lista que armazena dados de players.csv

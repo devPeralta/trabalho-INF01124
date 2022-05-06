@@ -9,7 +9,7 @@
 #define ALPHABET_SIZE 30
 #define FILEMAXNOME 25
 #define MAXRATINGS 24188078
-#define MAXPLAYERS 18945
+#define MAXPLAYERS 18939
 #define MAXTAGS 364950
 
 int main()
@@ -28,15 +28,19 @@ int main()
     char player_pos[50] = {0};
     int *list_sofifaid, *trieqtdrating;
     float *trieavgrating;
-    
+    char playernames[HASHSIZEPLAYER][MAXNOMEPLAYER];
+    int tops[15][MAXTOPN] = {0};
+    int buscatopid;
+    int index_position;
+
     lista_players = inicializaLista(); // inicializa uma lista encadeada para armazenar os dados dos jogadores
     lista_players = saveFile(file_players, players, lista_players); // salva os dados dos jogadores na lista
-    
-    saveRatings(file_minirating);
 
+    saveRatings(file_minirating);
+    
     ret = trie_new(&root); // cria trie
     for(int i=0; i<MAXPLAYERS; i++) { // insere "MAXPLAYERS" jogadores na trie
-        le_player(lista_players->dados, word, &list_sofifaid, player_pos); // salva dados do jogador em uma string auxiliar
+        le_player(lista_players->dados, word, &list_sofifaid, player_pos, playernames, tops); // salva dados do jogador em uma string auxiliar
         strcpy(word, minuscula(word)); // passa todos caracteres da string para minuscula
         player = search(list_sofifaid);
         if (player != NULL){
@@ -51,7 +55,7 @@ int main()
         }
         lista_players = lista_players->prox; // passa pro proximo jogador na lista encadeada
     }
-    
+
     while(1){
         system("cls");
         printf("$ ");
@@ -85,36 +89,49 @@ int main()
             case 2:{    
 
                 consulta_user = atoi(consulta_elemento);
-                
-                for(int i=0;i<20;i++){
-                    
-                    printf("userid=%d\tsofifaid=%d\t\tmaiorrating=%.2f\t\t", hashUser[hashCode(consulta_user, HASHSIZEUSERS)]->userid, hashUser[hashCode(consulta_user, HASHSIZEUSERS)]->sofifaid[i], hashUser[hashCode(consulta_user, HASHSIZEUSERS)]->rating[i]);
-                    printf("%.6f\t", hashArray[hashCode(hashUser[hashCode(consulta_user, HASHSIZEUSERS)]->sofifaid[i], HASHSIZEPLAYER)]->avgRating);
-                    printf("%d\n", hashArray[hashCode(hashUser[hashCode(consulta_user, HASHSIZEUSERS)]->sofifaid[i], HASHSIZEPLAYER)]->qtdRating);
-                }
-                
+                                 
+                print_userrating(consulta_user, playernames);
+
                 system("pause");
             }
             break;
             case 3:{
-                puts(consulta_elemento);
-                printf("\ntop%d", topN);
+                
+                buscatopid = indexPosition(consulta_elemento);
+
+                for(int i=0;i<topN;i++){
+                    
+                    printf("#%d: ", i+1);
+                    printf("%d\t", tops[buscatopid][i]);
+                    fputs(playernames[hashCode(tops[buscatopid][i], HASHSIZEPLAYER)], stdout);
+                    if(strlen(playernames[hashCode(tops[buscatopid][i], HASHSIZEPLAYER)]) < 8){
+                        printf("\t\t\t\t\t%.6f\t", hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->somaRating / hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->qtdRating);
+                    }
+                    else if(strlen(playernames[hashCode(tops[buscatopid][i], HASHSIZEPLAYER)]) < 16){
+                        printf("\t\t\t\t%.6f\t", hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->somaRating / hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->qtdRating);
+                    }
+                    else if(strlen(playernames[hashCode(tops[buscatopid][i], HASHSIZEPLAYER)]) < 24){
+                        printf("\t\t\t%.6f\t", hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->somaRating / hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->qtdRating);
+                    }
+                    else if(strlen(playernames[hashCode(tops[buscatopid][i], HASHSIZEPLAYER)]) < 32){
+                        printf("\t\t%.6f\t", hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->somaRating / hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->qtdRating);
+                    }
+                    else if(strlen(playernames[hashCode(tops[buscatopid][i], HASHSIZEPLAYER)]) >= 32){
+                        printf("\t%.6f\t", hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->somaRating / hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->qtdRating);
+                    }
+                    printf("%d\n", hashArray[hashCode(tops[buscatopid][i] , HASHSIZEPLAYER)]->qtdRating);
+                
+                }
                 system("pause");
             }
             break;
             case 4:{
-
             }
             break;
             default:{
 
             }
         }
-        
-
-
-
     }
-
     return 0;
 }
